@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useRef } from "react";
 import {
   Animated,
@@ -25,14 +24,14 @@ export default function SwipeableCard({
 }: Props) {
   const position = useRef(new Animated.ValueXY()).current;
 
-  // show feedback only after threshold
+  // Feedback opacity for tick/cross
   const likeOpacity = position.x.interpolate({
-    inputRange: [120, screenWidth],
+    inputRange: [0, 150],
     outputRange: [0, 1],
     extrapolate: "clamp",
   });
   const rejectOpacity = position.x.interpolate({
-    inputRange: [-screenWidth, -120],
+    inputRange: [-150, 0],
     outputRange: [1, 0],
     extrapolate: "clamp",
   });
@@ -72,26 +71,12 @@ export default function SwipeableCard({
       {...panResponder.panHandlers}
       style={[position.getLayout(), styles.card]}
     >
-      {/* Feedback */}
-      <Animated.View
-        style={[styles.feedbackContainer, { opacity: likeOpacity }]}
-      >
-        <LinearGradient
-          colors={["rgba(0,255,0,0.6)", "rgba(0,255,0,0.3)"]}
-          style={styles.feedbackBg}
-        >
-          <Text style={styles.feedbackText}>✅</Text>
-        </LinearGradient>
+      {/* Tick and Cross feedback */}
+      <Animated.View style={[styles.like, { opacity: likeOpacity }]}>
+        <Text style={styles.likeText}>✅</Text>
       </Animated.View>
-      <Animated.View
-        style={[styles.feedbackContainer, { opacity: rejectOpacity }]}
-      >
-        <LinearGradient
-          colors={["rgba(255,0,0,0.6)", "rgba(255,0,0,0.3)"]}
-          style={styles.feedbackBg}
-        >
-          <Text style={styles.feedbackText}>❌</Text>
-        </LinearGradient>
+      <Animated.View style={[styles.reject, { opacity: rejectOpacity }]}>
+        <Text style={styles.rejectText}>❌</Text>
       </Animated.View>
 
       {/* Card content */}
@@ -115,30 +100,24 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 5,
     position: "absolute",
-    justifyContent: "center",
-    alignItems: "center",
   },
   cardImage: { width: "100%", height: 200, borderRadius: 10, marginBottom: 10 },
   cardTitle: { fontSize: 20, fontWeight: "bold", marginBottom: 5 },
   cardDesc: { fontSize: 14, color: "#555" },
 
-  feedbackContainer: {
+  like: {
     position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 5,
-    borderRadius: 15,
+    top: 20,
+    left: 20,
+    zIndex: 2,
   },
-  feedbackBg: {
-    width: "60%",
-    height: "60%",
-    borderRadius: 15,
-    justifyContent: "center",
-    alignItems: "center",
+  likeText: { fontSize: 40, color: "green", fontWeight: "bold" },
+
+  reject: {
+    position: "absolute",
+    top: 20,
+    right: 20,
+    zIndex: 2,
   },
-  feedbackText: { fontSize: 80, fontWeight: "bold", color: "white" },
+  rejectText: { fontSize: 40, color: "red", fontWeight: "bold" },
 });
