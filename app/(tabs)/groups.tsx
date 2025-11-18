@@ -14,17 +14,13 @@ import { useEffect, useState } from "react";
 import { Button, FlatList, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { auth, db } from "../../constants/firebase";
 
-/* -------------------------------------------------------------
-   MAIN GROUPS SCREEN
---------------------------------------------------------------*/
+/* main group screen*/
 export default function GroupsScreen() {
   const [groups, setGroups] = useState([]);
   const [joinCode, setJoinCode] = useState("");
   const [user, setUser] = useState(null);
 
-  /* -------------------------------------------------------------
-    Ensure User is Signed In (Anonymous for prototyping)
-  --------------------------------------------------------------*/
+  /* anonymous authentication w firestore*/
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
       if (!u) {
@@ -37,9 +33,7 @@ export default function GroupsScreen() {
     return unsub;
   }, []);
 
-  /* -------------------------------------------------------------
-    Load groups user belongs to
-  --------------------------------------------------------------*/
+  /* load groups user is in*/
   useEffect(() => {
     if (!user) return;
 
@@ -59,9 +53,7 @@ export default function GroupsScreen() {
     return unsubscribe;
   }, [user]);
 
-  /* -------------------------------------------------------------
-    Create a new group
-  --------------------------------------------------------------*/
+  // creating group
   async function createGroup() {
     if (!user) {
       alert("You must be logged in to create a group.");
@@ -77,9 +69,7 @@ export default function GroupsScreen() {
     });
   }
 
-  /* -------------------------------------------------------------
-    Join a group using its code
-  --------------------------------------------------------------*/
+  //join group
   async function joinGroup() {
     if (!joinCode.trim()) return;
 
@@ -105,9 +95,7 @@ export default function GroupsScreen() {
     }
   }
 
-  /* -------------------------------------------------------------
-    UI Layout
-  --------------------------------------------------------------*/
+  //ui layout!!! 
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: "white" }}>
       

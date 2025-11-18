@@ -37,7 +37,7 @@ export default function TabLayout() {
         }}
       />
 
-      {/* ✅ ADD GROUPS AS A REAL TAB */}
+      {/*add groups */}
       <Tabs.Screen
         name="groups"
         options={{
@@ -48,7 +48,7 @@ export default function TabLayout() {
         }}
       />
 
-      {/* ❗ HIDE group-chat FROM THE TAB BAR */}
+      {/* hide group chat route*/}
       <Tabs.Screen
         name="group-chat"
         options={{
