@@ -1,9 +1,11 @@
-import { Stack } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       {/* Top Bar */}
       <View style={styles.topBar}>
         <Text style={styles.title}>Bottoms Up</Text>
@@ -18,9 +20,44 @@ export default function RootLayout() {
         </View>
       </View>
 
-      {/* Content */}
-      <Stack screenOptions={{ headerShown: false }} />
-    </View>
+      {/* Bottom Tabs */}
+      <Tabs
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: "#FF6347",
+          tabBarInactiveTintColor: "#555",
+          tabBarStyle: { height: 60, paddingBottom: 5 },
+        }}
+      >
+        <Tabs.Screen
+          name="tabs/home"
+          options={{
+            title: "Home",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="tabs/saved"
+          options={{
+            title: "Saved",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="bookmark-outline" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="tabs/groups"
+          options={{
+            title: "Groups",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="people-outline" size={size} color={color} />
+            ),
+          }}
+        />
+      </Tabs>
+    </SafeAreaView>
   );
 }
 

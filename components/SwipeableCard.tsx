@@ -1,4 +1,4 @@
-// components/SwipeableCard.tsx
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useRef } from "react";
 import {
   Animated,
@@ -24,6 +24,18 @@ export default function SwipeableCard({
   onSwipeLeft,
 }: Props) {
   const position = useRef(new Animated.ValueXY()).current;
+
+  // show feedback only after threshold
+  const likeOpacity = position.x.interpolate({
+    inputRange: [120, screenWidth],
+    outputRange: [0, 1],
+    extrapolate: "clamp",
+  });
+  const rejectOpacity = position.x.interpolate({
+    inputRange: [-screenWidth, -120],
+    outputRange: [1, 0],
+    extrapolate: "clamp",
+  });
 
   const panResponder = useRef(
     PanResponder.create({
@@ -60,6 +72,29 @@ export default function SwipeableCard({
       {...panResponder.panHandlers}
       style={[position.getLayout(), styles.card]}
     >
+      {/* Feedback */}
+      <Animated.View
+        style={[styles.feedbackContainer, { opacity: likeOpacity }]}
+      >
+        <LinearGradient
+          colors={["rgba(0,255,0,0.6)", "rgba(0,255,0,0.3)"]}
+          style={styles.feedbackBg}
+        >
+          <Text style={styles.feedbackText}>✅</Text>
+        </LinearGradient>
+      </Animated.View>
+      <Animated.View
+        style={[styles.feedbackContainer, { opacity: rejectOpacity }]}
+      >
+        <LinearGradient
+          colors={["rgba(255,0,0,0.6)", "rgba(255,0,0,0.3)"]}
+          style={styles.feedbackBg}
+        >
+          <Text style={styles.feedbackText}>❌</Text>
+        </LinearGradient>
+      </Animated.View>
+
+      {/* Card content */}
       <Image source={{ uri: event.image }} style={styles.cardImage} />
       <Text style={styles.cardTitle}>{event.title}</Text>
       <Text style={styles.cardDesc}>{event.description}</Text>
@@ -80,8 +115,30 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 5,
     position: "absolute",
+    justifyContent: "center",
+    alignItems: "center",
   },
   cardImage: { width: "100%", height: 200, borderRadius: 10, marginBottom: 10 },
   cardTitle: { fontSize: 20, fontWeight: "bold", marginBottom: 5 },
   cardDesc: { fontSize: 14, color: "#555" },
+
+  feedbackContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 5,
+    borderRadius: 15,
+  },
+  feedbackBg: {
+    width: "60%",
+    height: "60%",
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  feedbackText: { fontSize: 80, fontWeight: "bold", color: "white" },
 });

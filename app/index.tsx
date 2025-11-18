@@ -1,13 +1,20 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import SwipeableCard from "../components/SwipeableCard";
 import { EVENTS, Event } from "../constants/Events";
 
 const categories = ["All", "sports", "concerts", "campus"];
+const screenWidth = Dimensions.get("window").width;
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [savedEvents, setSavedEvents] = useState<Event[]>([]);
   const [eventsStack, setEventsStack] = useState<Event[]>(
     [...EVENTS].reverse()
   );
@@ -16,21 +23,14 @@ export default function Home() {
     (e) => selectedCategory === "All" || e.category === selectedCategory
   );
 
-  const handleSwipeRight = (event: Event) => {
-    setSavedEvents((prev) => [...prev, event]);
-    removeTopEvent();
-  };
+  const handleSwipeRight = (event: Event) => removeTopEvent();
+  const handleSwipeLeft = (event: Event) => removeTopEvent();
 
-  const handleSwipeLeft = (event: Event) => {
-    removeTopEvent();
-  };
-
-  const removeTopEvent = () => {
+  const removeTopEvent = () =>
     setEventsStack((prev) => prev.slice(0, prev.length - 1));
-  };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Category Tabs */}
       <View style={styles.categoryContainer}>
         {categories.map((cat) => (
@@ -69,12 +69,17 @@ export default function Home() {
           ))
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 10 },
+  container: {
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
   categoryContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
